@@ -22,10 +22,20 @@ Gofer new
 Gofer new
 	renggli: 'unsorted';
 	package: 'Shout';
-	package: 'RoelTyper';
-	package: 'ECompletion';
+	package: 'RoelTyper'.
+Gofer new
+        directory: '/home/wonka/projects/wonka-development/monticello/squeak/';
+	package: 'ECompletion' constraint: [:version | version author = 'djr'];
+        load.
+Gofer new
+	renggli: 'unsorted';
 	package: 'ECompletionOmniBrowser';
 	load.
+Gofer new
+        squeaksource: 'autoMethodCat';
+        package: 'AutomaticMethodCategorizer';
+        package: 'AutomaticMethodCategorizerOB';
+        load.
 !
 "Select Tools"
 SystemBrowser default: (Smalltalk at: #OBSystemBrowserAdaptor).

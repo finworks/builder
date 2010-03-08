@@ -26,11 +26,12 @@ function display_help() {
 	echo "$(basename $0) -i input -o output {-s script} "
 	echo " -i input product name, or image from images-directory"
 	echo " -o output product name"
+        echo " -O output product name (does not add extra level to output)"
 	echo " -s one or more scripts from the scripts-directory to build the image"
 }
 
 # parse options
-while getopts ":i:o:s:?" OPT ; do
+while getopts ":i:o:O:s:?" OPT ; do
 	case "$OPT" in
 
 		# input
@@ -57,7 +58,18 @@ while getopts ":i:o:s:?" OPT ; do
 			OUTPUT_IMAGE="$OUTPUT_PATH/$OUTPUT_NAME.image"
 			OUTPUT_CHANGES="$OUTPUT_PATH/$OUTPUT_NAME.changes"
 			OUTPUT_CACHE="$OUTPUT_PATH/package-cache"
-			OUTPUT_DEBUG="$OUTPUT_PATH/PharoDebug.log"
+			OUTPUT_DEBUG="$OUTPUT_PATH/SqueakDebug.log"
+		;;
+
+                # Output with flattened directory, useful for custom workspaces
+		O)	OUTPUT_NAME="$OPTARG"
+                        DONT_DELETE_OUTPUT_PATH=1
+			OUTPUT_PATH="$BUILD_PATH"
+			OUTPUT_SCRIPT="$OUTPUT_PATH/$OUTPUT_NAME.st"
+			OUTPUT_IMAGE="$OUTPUT_PATH/$OUTPUT_NAME.image"
+			OUTPUT_CHANGES="$OUTPUT_PATH/$OUTPUT_NAME.changes"
+			OUTPUT_CACHE="$OUTPUT_PATH/package-cache"
+			OUTPUT_DEBUG="$OUTPUT_PATH/SqueakDebug.log"
 		;;
 
 		# script
@@ -89,9 +101,12 @@ if [ -z "$OUTPUT_IMAGE" ] ; then
 fi
 
 # prepare output path
-if [ -d "$OUTPUT_PATH" ] ; then
+if [ -z "$DONT_DELETE_OUTPUT_PATH" -a -d "$OUTPUT_PATH" ] ; then
 	rm -rf "$OUTPUT_PATH"
+else
+        rm $OUTPUT_DEBUG
 fi
+
 mkdir -p "$OUTPUT_PATH"
 mkdir -p "$BUILD_CACHE/$OUTPUT_NAME"
 ln -s "$BUILD_CACHE/$OUTPUT_NAME" "$OUTPUT_CACHE"
@@ -109,6 +124,8 @@ for FILE in "${SCRIPTS[@]}" ; do
 done
 
 # build image in the background
+echo `pwd`
+echo "$PHARO_VM" $PHARO_PARAM "$OUTPUT_IMAGE" "$OUTPUT_SCRIPT"
 exec "$PHARO_VM" $PHARO_PARAM "$OUTPUT_IMAGE" "$OUTPUT_SCRIPT" &
 
 # wait for the process to terminate, or a debug log
