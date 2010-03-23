@@ -24,7 +24,7 @@ Gofer new
 	package: 'Shout';
 	package: 'RoelTyper'.
 Gofer new
-        directory: '/home/wonka/projects/wonka-development/monticello/squeak/';
+        directory: '/home/wonka/projects/wonka-development/monticello';
 	package: 'ECompletion' constraint: [:version | version author = 'djr'];
         load.
 Gofer new
