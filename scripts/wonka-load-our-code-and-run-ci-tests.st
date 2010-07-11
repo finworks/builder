@@ -1,1 +1,1 @@
-/home/wonka/projects/wonka-development/squeak/wonka-load-our-code-and-run-ci-tests.st
+/home/wonka/projects/wonka/squeak/wonka-load-our-code-and-run-ci-tests.st

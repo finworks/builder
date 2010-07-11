@@ -1,1 +1,1 @@
-/home/wonka/projects/wonka-development/squeak/wonka-install-gofer.st
+/home/wonka/projects/wonka/squeak/wonka-install-gofer.st
