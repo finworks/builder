@@ -2,7 +2,11 @@
 Gofer new
 	squeaksource: 'rb';
 	package: 'AST-Core';
+	package: 'AST-Semantic';
 	package: 'Refactoring-Core';
+	package: 'Refactoring-Changes';
+	package: 'Refactoring-Critics';
+	package: 'Refactoring-Environment';
 	package: 'Refactoring-Spelling';
 	load.
 !
@@ -22,13 +26,6 @@ Gofer new
 Gofer new
 	renggli: 'unsorted';
 	package: 'Shout';
-	package: 'RoelTyper'.
-Gofer new
-        directory: '/home/wonka/projects/wonka-development/monticello';
-	package: 'ECompletion' constraint: [:version | version author = 'djr'];
-        load.
-Gofer new
-	renggli: 'unsorted';
 	package: 'ECompletionOmniBrowser';
 	load.
 Gofer new
@@ -39,4 +36,3 @@ Gofer new
 !
 "Select Tools"
 SystemBrowser default: (Smalltalk at: #OBSystemBrowserAdaptor).
-

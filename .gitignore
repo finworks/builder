@@ -1,5 +1,7 @@
 .AppleDouble
-
-images/*
-builds/*
-cache/*
+:2e_*
+.DS_Store
+.svn
+*~
+*.swp
+*.tmproj

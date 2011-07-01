@@ -1,2 +1,3 @@
 "Run the Seaside Tests"
-HDTestReport runPackages: #('Seaside2.8a1' 'Comet' 'RSRSS2').
+HDTestReport runPackages: #('Seaside2' 'Scriptaculous' 'Comet' 'RSRSS2').
+HDLintReport runPackages: #('Seaside2' 'Scriptaculous' 'Comet' 'RSRSS2').
