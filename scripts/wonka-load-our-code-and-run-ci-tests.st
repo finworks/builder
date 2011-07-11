@@ -1,1 +1,0 @@
-/home/wonka/projects/wonka/squeak/wonka-load-our-code-and-run-ci-tests.st

@@ -1,1 +1,0 @@
-/home/wonka/projects/wonka/squeak/wonka-bootstrap.st

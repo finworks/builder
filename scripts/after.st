@@ -1,4 +1,3 @@
-Utilities setAuthorInitials: ''.
 "Clear Monticello Caches"
 MCCacheRepository instVarNamed: 'default' put: nil.
 MCFileBasedRepository flushAllCaches.
