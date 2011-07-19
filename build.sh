@@ -9,7 +9,7 @@
 
 # vm configuration
 PHARO_VM="/usr/local/bin/squeak"
-PHARO_PARAM="-nodisplay -vm-sound-null"
+PHARO_PARAM="-vm-sound-null"
 
 # directory configuration
 BUILD_PATH="${WORKSPACE:=$(readlink -f $(dirname $0))/builds}"
