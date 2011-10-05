@@ -3,8 +3,10 @@ Gofer new
 	squeaksource: 'KomHttpServer';
 	package: 'KomHttpServerLight';
 	load.
+!
+"Komanche Adaptors"
 Gofer new
-	squeaksource: 'Seaside30';
+	squeaksource: 'Seaside31';
 	package: 'Seaside-Adaptors-Comanche';
 	package: 'Seaside-Tests-Adaptors-Comanche';
 	load.
@@ -12,4 +14,4 @@ Gofer new
 "Start Komanche"
 (WAComancheAdaptor port: 8080)
 	codec: GRPharoUtf8Codec new;
-	start
+	start.

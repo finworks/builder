@@ -4,7 +4,7 @@
 #   scripts. Best to be used together with Jenkins.
 #
 # Copyright (c) 2010 Yanni Chiu <yanni@rogers.com>
-# Copyright (c) 2010 Lukas Renggli <renggli@gmail.com>
+# Copyright (c) 2010-2011 Lukas Renggli <renggli@gmail.com>
 #
 
 # vm configuration
@@ -12,12 +12,40 @@ PHARO_VM="/usr/local/bin/squeak"
 PHARO_PARAM="-vm-sound-null"
 
 # directory configuration
-BUILD_PATH="${WORKSPACE:=$(readlink -f $(dirname $0))/builds}"
+BASE_PATH="$(cd "$(dirname "$0")" && pwd)"
+BUILD_PATH="${WORKSPACE:=$BASE_PATH/builds}"
 
-IMAGES_PATH="$(readlink -f $(dirname $0))/images"
-SCRIPTS_PATH="$(readlink -f $(dirname $0))/scripts"
-SOURCES_PATH="$(readlink -f $(dirname $0))/sources"
-BUILD_CACHE="$(readlink -f $(dirname $0))/cache"
+IMAGES_PATH="$BASE_PATH/images"
+SCRIPTS_PATH="$BASE_PATH/scripts"
+SOURCES_PATH="$BASE_PATH/sources"
+VM_PATH="$BASE_PATH/oneclick/Contents"
+BUILD_CACHE="$BASE_PATH/cache"
+
+# vm configuration
+case "$(uname -s)" in
+	"Linux")
+		if [ -f "$(which cog)" ] ; then
+			PHARO_VM="$(which cog)"
+		elif [ -f "$(which squeak)" ] ; then
+			PHARO_VM="$(which squeak)"
+		else
+			PHARO_VM="$VM_PATH/Linux/squeak"
+		fi
+		PHARO_PARAM="-nodisplay -nosound"
+		;;
+	"Darwin")
+		PHARO_VM="$VM_PATH/MacOS/Squeak VM Opt"
+		PHARO_PARAM="-headless"
+		;;
+	"Cygwin")
+		PHARO_VM="$VM_PATH/Windows/Squeak.exe"
+		PHARO_PARAM="-headless"
+		;;
+	*)
+		echo "$(basename $0): unknown platform $(uname -s)"
+		exit 1
+		;;
+esac
 
 # build configuration
 SCRIPTS=("$SCRIPTS_PATH/before.st")
@@ -63,6 +91,7 @@ while getopts ":i:o:O:s:?" OPT ; do
 		# output
 		o)	OUTPUT_NAME="$OPTARG"
 			OUTPUT_PATH="$BUILD_PATH/$OUTPUT_NAME"
+			OUTPUT_ZIP="$BUILD_PATH/$OUTPUT_NAME.zip"
 			OUTPUT_SCRIPT="$OUTPUT_PATH/$OUTPUT_NAME.st"
 			OUTPUT_IMAGE="$OUTPUT_PATH/$OUTPUT_NAME.image"
 			OUTPUT_CHANGES="$OUTPUT_PATH/$OUTPUT_NAME.changes"
@@ -141,11 +170,16 @@ exec "$PHARO_VM" $PHARO_PARAM "$OUTPUT_IMAGE" "$OUTPUT_SCRIPT" &
 # wait for the process to terminate, or a debug log
 if [ $! ] ; then
 	while kill -0 $! 2> /dev/null ; do
-		if [ -f "$OUTPUT_DEBUG" ] ; then
+		if [ -f "$OUTPUT_DUMP" ] || [ -f "$OUTPUT_DEBUG" ] ; then
 			sleep 5
 			kill -s SIGKILL $! 2> /dev/null
-			echo "$(basename $0): error loading code ($PHARO_VM)"
-			cat "$OUTPUT_DEBUG" | tr '\r' '\n' | sed 's/^/  /'
+			if [ -f "$OUTPUT_DUMP" ] ; then
+				echo "$(basename $0): VM aborted ($PHARO_VM)"
+				cat "$OUTPUT_DUMP" | tr '\r' '\n' | sed 's/^/  /'
+			elif [ -f "$OUTPUT_DEBUG" ] ; then
+				echo "$(basename $0): Execution aborted ($PHARO_VM)"
+				cat "$OUTPUT_DEBUG" | tr '\r' '\n' | sed 's/^/  /'
+			fi
 			exit 1
 		fi
 		sleep 1
@@ -156,8 +190,18 @@ else
 fi
 
 # remove cache link
-rm -f "$OUTPUT_CACHE"
-rm -f "$OUTPUT_PATH/*.sources"
+rm -rf "$OUTPUT_CACHE" "$OUTPUT_ZIP"
+(
+	cd "$OUTPUT_PATH"
+	rm -f *.sources
+)
+
+# archive changes and image
+(
+	cd "$OUTPUT_PATH"
+	zip -qj "$OUTPUT_ZIP" "$OUTPUT_IMAGE" "$OUTPUT_CHANGES"
+	[ -d "files" ] && zip -qr "$OUTPUT_ZIP" "files"
+)
 
 # success
 exit 0

@@ -15,7 +15,7 @@ Gofer new
 	load.
 !
 Gofer new
-	squeaksource: 'Seaside30';
+	squeaksource: 'Seaside31';
 	package: 'Seaside-Adaptors-Swazoo';
 	load.
 !
