@@ -1,10 +1,3 @@
-"Unload Build Tools"
-[ Gofer new
-	package: 'HudsonBuildTools';
-	unload ]
-		on: Error
-		do: [ :err | "package not present" ].
-!
 "Clear Monticello Caches"
 MCCacheRepository instVarNamed: 'default' put: nil.
 MCFileBasedRepository flushAllCaches.
