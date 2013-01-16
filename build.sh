@@ -164,18 +164,19 @@ EOF
 	cat "$FILE" >> "$OUTPUT_SCRIPT"
         cat >> "$OUTPUT_SCRIPT" <<EOF
 ]
-	on: Exception
-	do:
-		[:ex | | errorfilename errorfile |
-                ((ex isKindOf: ProgressInitiationException) | (ex isKindOf: Notification)) ifTrue: [ex pass].
-		errorfilename := FileDirectory default
-			nextNameFor: 'image-build-error'
-			extension: 'txt'.
-		errorfile := FileStream fileNamed: errorfilename.
-		ex
-			printStackOn: errorfile
-			upTo: [ :aContext | false ].
-		errorfile close.].
+  on: Exception
+  do:
+    [:ex | | errorfile |
+    ((ex isKindOf: ProgressInitiationException) | (ex isKindOf: Notification)) ifTrue: [ex pass].
+    errorfile := FileStream fileNamed: 'SqueakDebug.log'.
+    (ex class canUnderstand: #'printStackOn:upTo:')
+      ifTrue: [
+        ex
+          printStackOn: errorfile
+          upTo: [ :aContext | false ]]
+      ifFalse: [ex printOn: errorfile].
+      errorfile close.
+    ex pass]
 EOF
 	echo "!" >> "$OUTPUT_SCRIPT"
 done
