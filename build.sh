@@ -96,7 +96,7 @@ while getopts ":i:o:O:s:?" OPT ; do
 			OUTPUT_IMAGE="$OUTPUT_PATH/$OUTPUT_NAME.image"
 			OUTPUT_CHANGES="$OUTPUT_PATH/$OUTPUT_NAME.changes"
 			OUTPUT_CACHE="$OUTPUT_PATH/package-cache"
-			OUTPUT_DEBUG="$OUTPUT_PATH/SqueakDebug.log"
+			OUTPUT_DEBUG="$OUTPUT_PATH/PharoDebug.log"
 		;;
 
                 # Output with flattened directory, useful for custom workspaces
@@ -107,7 +107,7 @@ while getopts ":i:o:O:s:?" OPT ; do
 			OUTPUT_IMAGE="$OUTPUT_PATH/$OUTPUT_NAME.image"
 			OUTPUT_CHANGES="$OUTPUT_PATH/$OUTPUT_NAME.changes"
 			OUTPUT_CACHE="$OUTPUT_PATH/package-cache"
-			OUTPUT_DEBUG="$OUTPUT_PATH/SqueakDebug.log"
+			OUTPUT_DEBUG="$OUTPUT_PATH/PharoDebug.log"
 		;;
 
 		# script
@@ -158,26 +158,7 @@ find "$SOURCES_PATH" -name "*.sources" -exec ln -f "{}" "$OUTPUT_PATH/" \;
 SCRIPTS=("${SCRIPTS[@]}" "$SCRIPTS_PATH/after.st")
 
 for FILE in "${SCRIPTS[@]}" ; do
-        cat >> "$OUTPUT_SCRIPT" <<EOF
-[
-EOF
 	cat "$FILE" >> "$OUTPUT_SCRIPT"
-        cat >> "$OUTPUT_SCRIPT" <<EOF
-]
-  on: Exception
-  do:
-    [:ex | | errorfile |
-    ((ex isKindOf: ProgressInitiationException) | (ex isKindOf: Notification)) ifTrue: [ex pass].
-    errorfile := FileStream fileNamed: 'SqueakDebug.log'.
-    (ex class canUnderstand: #'printStackOn:upTo:')
-      ifTrue: [
-        ex
-          printStackOn: errorfile
-          upTo: [ :aContext | false ]]
-      ifFalse: [ex printOn: errorfile].
-      errorfile close.
-    ex pass]
-EOF
 	echo "!" >> "$OUTPUT_SCRIPT"
 done
 
