@@ -96,7 +96,7 @@ while getopts ":i:o:O:s:?" OPT ; do
 			OUTPUT_IMAGE="$OUTPUT_PATH/$OUTPUT_NAME.image"
 			OUTPUT_CHANGES="$OUTPUT_PATH/$OUTPUT_NAME.changes"
 			OUTPUT_CACHE="$OUTPUT_PATH/package-cache"
-			OUTPUT_DEBUG="$OUTPUT_PATH/PharoDebug.log"
+			OUTPUT_DEBUG="$OUTPUT_PATH/SqueakDebug.log"
 		;;
 
                 # Output with flattened directory, useful for custom workspaces
@@ -107,7 +107,7 @@ while getopts ":i:o:O:s:?" OPT ; do
 			OUTPUT_IMAGE="$OUTPUT_PATH/$OUTPUT_NAME.image"
 			OUTPUT_CHANGES="$OUTPUT_PATH/$OUTPUT_NAME.changes"
 			OUTPUT_CACHE="$OUTPUT_PATH/package-cache"
-			OUTPUT_DEBUG="$OUTPUT_PATH/PharoDebug.log"
+			OUTPUT_DEBUG="$OUTPUT_PATH/SqueakDebug.log"
 		;;
 
 		# script
