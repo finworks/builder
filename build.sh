@@ -158,7 +158,28 @@ find "$SOURCES_PATH" -name "*.sources" -exec ln -f "{}" "$OUTPUT_PATH/" \;
 SCRIPTS=("${SCRIPTS[@]}" "$SCRIPTS_PATH/after.st")
 
 for FILE in "${SCRIPTS[@]}" ; do
+        cat >> "$OUTPUT_SCRIPT" <<EOF
+[
+EOF
 	cat "$FILE" >> "$OUTPUT_SCRIPT"
+        cat >> "$OUTPUT_SCRIPT" <<EOF
+]
+	on: Exception
+	do:
+		[:ex | | errorfilename errorfile |
+                ((ex isKindOf: ProgressInitiationException) | (ex isKindOf: Notification)) ifTrue: [ex pass].
+		errorfilename := FileDirectory default
+			nextNameFor: 'image-build-error'
+			extension: 'txt'.
+		errorfile := FileStream fileNamed: errorfilename.
+"
+                ex printOn: ErrorFile
+"
+		ex
+			printStackOn: errorfile
+			upTo: [ :aContext | false ].
+		errorfile close.].
+EOF
 	echo "!" >> "$OUTPUT_SCRIPT"
 done
 
