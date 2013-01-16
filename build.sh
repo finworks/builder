@@ -172,9 +172,6 @@ EOF
 			nextNameFor: 'image-build-error'
 			extension: 'txt'.
 		errorfile := FileStream fileNamed: errorfilename.
-"
-                ex printOn: ErrorFile
-"
 		ex
 			printStackOn: errorfile
 			upTo: [ :aContext | false ].
