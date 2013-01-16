@@ -31,7 +31,7 @@ case "$(uname -s)" in
 		else
 			PHARO_VM="$VM_PATH/Linux/squeak"
 		fi
-		PHARO_PARAM="-nosound"
+		PHARO_PARAM=""
 		;;
 	"Darwin")
 		PHARO_VM="$VM_PATH/MacOS/Squeak VM Opt"
